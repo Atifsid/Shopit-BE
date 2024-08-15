@@ -1,5 +1,7 @@
 package com.example.shopit.service;
 
+import com.example.shopit.constant.Constant;
+import com.example.shopit.entity.Product;
 import com.example.shopit.entity.User;
 import com.example.shopit.repository.RepositoryAccessor;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,8 +18,16 @@ import java.util.List;
 public class MainService implements UserDetailsService {
 
     public void seedProducts() {
-
-//        RepositoryAccessor.getProductRepository().save();
+        Constant.PRODUCTS.forEach(product -> {
+            Product newProduct = Product.builder()
+                    .title(product.getTitle())
+                    .price(product.getPrice())
+                    .image(product.getImage())
+                    .build();
+            newProduct.setActive(true);
+            newProduct.setDeleted(false);
+            RepositoryAccessor.getProductRepository().save(newProduct);
+        });
     }
 
     @Override
