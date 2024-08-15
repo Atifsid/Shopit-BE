@@ -29,6 +29,9 @@ public class CartService {
                 UserProduct userProduct = optionalUserProduct.get();
                 userProduct.setQuantity(userProduct.getQuantity() + 1);
                 RepositoryAccessor.getUserProductRepository().save(userProduct);
+                response.setCode(HttpStatus.OK.value());
+                response.setStatus(HttpStatus.OK);
+                response.setMessage("Item quantity increased in the cart");
             } else {
                 Optional<Product> optionalProduct = RepositoryAccessor.getProductRepository().findById(productId);
                 if (optionalProduct.isPresent()) {
@@ -74,7 +77,7 @@ public class CartService {
             response.setCode(HttpStatus.OK.value());
             response.setStatus(HttpStatus.OK);
             response.setData(userProducts);
-            response.setMessage("Successfully cart items");
+            response.setMessage("Successfully fetched cart items");
         } else {
             response.setCode(HttpStatus.UNAUTHORIZED.value());
             response.setStatus(HttpStatus.UNAUTHORIZED);
