@@ -14,10 +14,10 @@ public class Product extends BaseModel {
     private Long price;
     private String image;
 
-    public Product(int i, String s, double v, String url) {
-        this.title = s;
-        this.image = url;
-        this.price = (long) v;
-        this.setId((long) i);
+    public Product(int id, String title, double price, String image) {
+        this.title = title;
+        this.image = image;
+        this.price = (long) price;
+        this.setId((long) id);
     }
 }
