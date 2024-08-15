@@ -57,7 +57,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                             UserResponse.builder()
                                     .id(user.getId())
                                     .email(user.getEmail())
-                                    .name(user.getName())
                                     .build();
                     SecurityContext context = SecurityContextHolder.createEmptyContext();
                     UsernamePasswordAuthenticationToken authToken =

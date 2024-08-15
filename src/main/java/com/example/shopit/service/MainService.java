@@ -1,21 +1,33 @@
 package com.example.shopit.service;
 
 import com.example.shopit.constant.Constant;
+import com.example.shopit.dto.request.UserRequest;
+import com.example.shopit.dto.response.ResponseDto;
+import com.example.shopit.dto.response.UserResponse;
 import com.example.shopit.entity.Product;
 import com.example.shopit.entity.User;
 import com.example.shopit.repository.RepositoryAccessor;
+import com.example.shopit.utils.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 // There could've been multiple services but this is a small project.
 @Service
 public class MainService implements UserDetailsService {
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
+    @Autowired private JwtUtil jwtUtil;
+
 
     public void seedProducts() {
         Constant.PRODUCTS.forEach(product -> {
@@ -43,5 +55,74 @@ public class MainService implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(), user.getPassword(), grantedAuthorities);
+    }
+
+    public ResponseDto<UserResponse> signup(UserRequest userRequest) {
+        ResponseDto<UserResponse> response = new ResponseDto<>();
+        Optional<User> optionalUser = RepositoryAccessor.getUserRepository()
+                .existsByEmailAndIsActiveAndIsDeleted(userRequest.getEmail(), true, false);
+        if (optionalUser.isPresent()) {
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("Email already exists");
+            response.setStatus(HttpStatus.BAD_REQUEST);
+        } else {
+            User user = User.builder()
+                    .email(userRequest.getEmail())
+                    .password(bcryptEncoder.encode(userRequest.getPassword()))
+                    .build();
+            RepositoryAccessor.getUserRepository().save(user);
+
+            UserResponse userResponse =
+                    UserResponse.builder()
+                            .id(user.getId())
+                            .email(user.getEmail())
+                            .build();
+            String authToken = jwtUtil.generateToken(userResponse);
+            userResponse.setToken(authToken);
+            response.setData(userResponse);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage("Sign up successful");
+            response.setStatus(HttpStatus.OK);
+        }
+        return response;
+    }
+
+    public ResponseDto<UserResponse> login(UserRequest userRequest) {
+        ResponseDto<UserResponse> response = new ResponseDto<>();
+        Optional<User> user =
+                RepositoryAccessor.getUserRepository()
+                        .findByEmailIgnoreCaseAndIsActiveAndIsDeleted(userRequest.getEmail(), true, false);
+        if (user.isPresent()) {
+            boolean isLoggedIn =
+                    bcryptEncoder.matches(userRequest.getPassword(), user.get().getPassword());
+            if (!isLoggedIn) {
+                response.setCode(HttpStatus.BAD_REQUEST.value());
+                response.setStatus(HttpStatus.BAD_REQUEST);
+                response.setMessage("Invalid password");
+            } else {
+                UserResponse userResponse = generateUserDetails(user.get());
+                response.setCode(HttpStatus.OK.value());
+                response.setStatus(HttpStatus.OK);
+                response.setMessage("Login Successful");
+                response.setData(userResponse);
+            }
+        } else {
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setStatus(HttpStatus.BAD_REQUEST);
+            response.setMessage("Invalid email");
+        }
+
+        return response;
+    }
+
+    public UserResponse generateUserDetails(User user) {
+        UserResponse userDetailResponse =
+                UserResponse.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .build();
+        String authToken = jwtUtil.generateToken(userDetailResponse);
+        userDetailResponse.setToken(authToken);
+        return userDetailResponse;
     }
 }

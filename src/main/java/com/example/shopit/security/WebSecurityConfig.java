@@ -47,9 +47,6 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             "/auth/signup",
             "/auth/login/*",
             "/auth/signup/*",
-            "/auth/reset-password",
-            "/auth/forgot-password",
-            "/auth/set-password",
             "/h2-console",
     };
 

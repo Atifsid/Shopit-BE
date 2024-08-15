@@ -1,6 +1,5 @@
-package com.example.shopit.entity;
+package com.example.shopit.dto.request;
 
-import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -8,8 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-public class User extends BaseModel {
+public class UserRequest {
     private String email;
     private String password;
 }
