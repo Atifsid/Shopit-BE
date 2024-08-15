@@ -59,9 +59,9 @@ public class AuthService implements UserDetailsService {
 
     public ResponseDto<UserResponse> signup(UserRequest userRequest) {
         ResponseDto<UserResponse> response = new ResponseDto<>();
-        Optional<User> optionalUser = RepositoryAccessor.getUserRepository()
+        Boolean isUserExistsByEmail = RepositoryAccessor.getUserRepository()
                 .existsByEmailAndIsActiveAndIsDeleted(userRequest.getEmail(), true, false);
-        if (optionalUser.isPresent()) {
+        if (isUserExistsByEmail) {
             response.setCode(HttpStatus.BAD_REQUEST.value());
             response.setMessage("Email already exists");
             response.setStatus(HttpStatus.BAD_REQUEST);

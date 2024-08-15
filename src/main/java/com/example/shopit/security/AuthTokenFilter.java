@@ -38,6 +38,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         final String userEmail;
         if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) {
             filterChain.doFilter(request, response);
+            LOGGER.error("----------Invalid token----------");
             return;
         }
         jwt = authHeader.substring(7);

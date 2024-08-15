@@ -3,6 +3,7 @@ package com.example.shopit.utils;
 import com.example.shopit.dto.response.UserResponse;
 import com.example.shopit.entity.User;
 import com.example.shopit.repository.RepositoryAccessor;
+import com.example.shopit.repository.ServicesAccessor;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -83,10 +84,7 @@ public class JwtUtil {
 
     public UserResponse getUserAuthDetailsFromToken(String token) {
         Claims claims = extractAllClaims(token);
-        UserResponse userResponse = new UserResponse();
-        userResponse.setId(claims.get("id", Long.class));
-        userResponse.setEmail(claims.get("email", String.class));
-        userResponse.setName(claims.get("name", String.class));
-        return userResponse;
+        return ServicesAccessor.getModelMapper()
+                .map(claims.get("UserAuthDetails"), UserResponse.class);
     }
 }

@@ -74,7 +74,7 @@ public class CartService {
             response.setCode(HttpStatus.OK.value());
             response.setStatus(HttpStatus.OK);
             response.setData(userProducts);
-            response.setMessage("Unauthorized User");
+            response.setMessage("Successfully cart items");
         } else {
             response.setCode(HttpStatus.UNAUTHORIZED.value());
             response.setStatus(HttpStatus.UNAUTHORIZED);
