@@ -38,6 +38,7 @@ public class MainService implements UserDetailsService {
                     .build();
             newProduct.setActive(true);
             newProduct.setDeleted(false);
+            newProduct.setId(product.getId());
             RepositoryAccessor.getProductRepository().save(newProduct);
         });
     }
