@@ -16,8 +16,8 @@ import java.util.Optional;
 
 @Service
 public class CartService {
-    public ResponseDto<UserResponse> addItemToCart(Long productId) {
-        ResponseDto<UserResponse> response = new ResponseDto<>();
+    public ResponseDto<String> addItemToCart(Long productId) {
+        ResponseDto<String> response = new ResponseDto<>();
         // Fetching details from token
         UserResponse userResponse =
                 (UserResponse) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -78,6 +78,37 @@ public class CartService {
             response.setStatus(HttpStatus.OK);
             response.setData(userProducts);
             response.setMessage("Successfully fetched cart items");
+        } else {
+            response.setCode(HttpStatus.UNAUTHORIZED.value());
+            response.setStatus(HttpStatus.UNAUTHORIZED);
+            response.setMessage("Unauthorized User");
+        }
+
+        return response;
+    }
+
+    public ResponseDto<List<ProductResponse>> deleteItemFromCart(Long id) {
+        ResponseDto<List<ProductResponse>> response = new ResponseDto<>();
+        // Fetching details from token
+        UserResponse userResponse =
+                (UserResponse) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> optionalUser = RepositoryAccessor.getUserRepository().findByIdAndIsActiveAndIsDeleted(userResponse.getId(), true, false);
+
+        if (optionalUser.isPresent()) {
+            Optional<UserProduct> optionalUserProduct = RepositoryAccessor.getUserProductRepository().findByUserIdAndProductIdAndIsActiveAndIsDeleted(userResponse.getId(), id, true, false);
+            if (optionalUserProduct.isPresent()) {
+                UserProduct userProduct = optionalUserProduct.get();
+                userProduct.setActive(false);
+                userProduct.setDeleted(true);
+                RepositoryAccessor.getUserProductRepository().save(userProduct);
+                response.setCode(HttpStatus.OK.value());
+                response.setStatus(HttpStatus.OK);
+                response.setMessage("Item removed from cart");
+            } else {
+                response.setCode(HttpStatus.BAD_REQUEST.value());
+                response.setStatus(HttpStatus.BAD_REQUEST);
+                response.setMessage("Invalid Product id");
+            }
         } else {
             response.setCode(HttpStatus.UNAUTHORIZED.value());
             response.setStatus(HttpStatus.UNAUTHORIZED);

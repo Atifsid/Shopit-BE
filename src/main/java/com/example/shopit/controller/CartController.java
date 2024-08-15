@@ -13,12 +13,17 @@ import java.util.List;
 @RequestMapping("cart")
 public class CartController {
     @PutMapping("add/item/{id}")
-    public ResponseDto<UserResponse> addItemToCart(@PathVariable Long id) {
+    public ResponseDto<String> addItemToCart(@PathVariable Long id) {
         return ServicesAccessor.getCartService().addItemToCart(id);
     }
 
     @GetMapping("get/items")
     public ResponseDto<List<ProductResponse>> getUserItems() {
         return ServicesAccessor.getCartService().getUserItems();
+    }
+
+    @DeleteMapping("delete/item/{id}")
+    public ResponseDto<List<ProductResponse>> deleteItemFromCart(@PathVariable Long id) {
+        return ServicesAccessor.getCartService().deleteItemFromCart(id);
     }
 }
