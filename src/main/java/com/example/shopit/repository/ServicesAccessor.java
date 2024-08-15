@@ -1,14 +1,18 @@
 package com.example.shopit.repository;
 
-import com.example.shopit.service.MainService;
+import com.example.shopit.service.AuthService;
+import com.example.shopit.service.CartService;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ServicesAccessor {
-    @Getter private static MainService mainService;
+    @Getter private static AuthService authService;
+    @Getter private static CartService cartService;
 
-    ServicesAccessor(MainService mainService) {
-        ServicesAccessor.mainService = mainService;
+    ServicesAccessor(AuthService authService,
+                     CartService cartService) {
+        ServicesAccessor.authService = authService;
+        ServicesAccessor.cartService = cartService;
     }
 }

@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 public class DataSeeder implements CommandLineRunner{
     @Override
     public void run(String... args) throws Exception {
-        ServicesAccessor.getMainService().seedProducts();
+        ServicesAccessor.getAuthService().seedProducts();
     }
 }

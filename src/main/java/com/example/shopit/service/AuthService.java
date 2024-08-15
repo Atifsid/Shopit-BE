@@ -21,9 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-// There could've been multiple services but this is a small project.
 @Service
-public class MainService implements UserDetailsService {
+public class AuthService implements UserDetailsService {
     @Autowired
     private PasswordEncoder bcryptEncoder;
     @Autowired private JwtUtil jwtUtil;

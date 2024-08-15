@@ -15,12 +15,12 @@ public class AuthController {
     @PostMapping("signup")
     public ResponseDto<UserResponse> saveUser(
             @RequestBody UserRequest userRequest) {
-        return ServicesAccessor.getMainService().signup(userRequest);
+        return ServicesAccessor.getAuthService().signup(userRequest);
     }
 
     @PostMapping("login")
     public ResponseDto<UserResponse> saveAnnouncement(
             @RequestBody UserRequest userRequest) {
-        return ServicesAccessor.getMainService().login(userRequest);
+        return ServicesAccessor.getAuthService().login(userRequest);
     }
 }

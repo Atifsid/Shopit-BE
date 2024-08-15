@@ -3,7 +3,7 @@ package com.example.shopit.security;
 import java.util.Arrays;
 import java.util.List;
 
-import com.example.shopit.service.MainService;
+import com.example.shopit.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,7 +54,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new MainService();
+        return new AuthService();
     }
 
     @Bean

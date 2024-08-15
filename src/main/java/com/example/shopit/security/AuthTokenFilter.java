@@ -3,14 +3,13 @@ package com.example.shopit.security;
 import com.example.shopit.dto.response.UserResponse;
 import com.example.shopit.entity.User;
 import com.example.shopit.repository.RepositoryAccessor;
-import com.example.shopit.service.MainService;
+import com.example.shopit.service.AuthService;
 import com.example.shopit.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +27,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthTokenFilter.class);
     @Autowired private JwtUtil jwtUtil;
-    @Autowired private MainService mainService;
+    @Autowired private AuthService authService;
 
     @Override
     protected void doFilterInternal(
@@ -45,7 +44,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         userEmail = jwtUtil.extractUserName(jwt);
         if (StringUtils.isNotEmpty(userEmail)
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = mainService.loadUserByUsername(userEmail);
+            UserDetails userDetails = authService.loadUserByUsername(userEmail);
             UserResponse userDetailsResponseDto = jwtUtil.getUserAuthDetailsFromToken(jwt);
             Optional<User> userExists =
                     RepositoryAccessor.getUserRepository()
