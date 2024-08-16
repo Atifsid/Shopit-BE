@@ -12,4 +12,5 @@ public class ProductResponse {
     private String title;
     private String image;
     private Integer quantity;
+    private Long price;
 }

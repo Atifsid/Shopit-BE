@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface UserProductRepository extends CrudRepository<UserProduct, Long> {
     Optional<UserProduct> findByUserIdAndProductIdAndIsActiveAndIsDeleted(Long userId, Long productId, Boolean isActive, Boolean isDeleted);
     List<UserProduct> findByUserIdAndAndIsActiveAndIsDeleted(Long productId, Boolean isActive, Boolean isDeleted);
+    Long countByUserIdAndIsActiveAndIsDeleted(Long userId, Boolean isActive, Boolean isDeleted);
 }
