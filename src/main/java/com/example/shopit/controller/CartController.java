@@ -23,7 +23,12 @@ public class CartController {
     }
 
     @DeleteMapping("delete/item/{id}")
-    public ResponseDto<List<ProductResponse>> deleteItemFromCart(@PathVariable Long id) {
+    public ResponseDto<String> deleteItemFromCart(@PathVariable Long id) {
         return ServicesAccessor.getCartService().deleteItemFromCart(id);
+    }
+
+    @PutMapping("decrease/item/{id}")
+    public ResponseDto<String> decreaseItemInCart(@PathVariable Long id) {
+        return ServicesAccessor.getCartService().decreaseItemInCart(id);
     }
 }
