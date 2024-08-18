@@ -19,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseDto<UserResponse> saveAnnouncement(
+    public ResponseDto<UserResponse> loginUser(
             @RequestBody UserRequest userRequest) {
         return ServicesAccessor.getAuthService().login(userRequest);
     }

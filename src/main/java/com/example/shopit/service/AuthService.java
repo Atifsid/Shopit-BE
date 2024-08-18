@@ -109,7 +109,7 @@ public class AuthService implements UserDetailsService {
         } else {
             response.setCode(HttpStatus.BAD_REQUEST.value());
             response.setStatus(HttpStatus.BAD_REQUEST);
-            response.setMessage("Invalid email");
+            response.setMessage("User does not exist");
         }
 
         return response;
